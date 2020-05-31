@@ -438,13 +438,20 @@ JRESULT TJpg_Decoder::drawSdJpg(int32_t x, int32_t y, const char *pFilename) {
 JRESULT TJpg_Decoder::drawSdJpg(int32_t x, int32_t y, const String& pFilename) {
 
   // Check if file exists
+#if defined (TEENSYDUINO)
+  if ( !SD.exists(pFilename.c_str()) )
+#else
   if ( !SD.exists(pFilename) )
+#endif
   {
     Serial.println(F("Jpeg file not found"));
     return JDR_INP;
   }
-
+#if defined (TEENSYDUINO)
+    return drawSdJpg(x, y, SD.open( pFilename.c_str(), FILE_READ));
+#else
     return drawSdJpg(x, y, SD.open( pFilename, FILE_READ));
+#endif
 }
 
 /***************************************************************************************
@@ -501,13 +508,21 @@ JRESULT TJpg_Decoder::getSdJpgSize(uint16_t *w, uint16_t *h, const char *pFilena
 JRESULT TJpg_Decoder::getSdJpgSize(uint16_t *w, uint16_t *h, const String& pFilename) {
 
   // Check if file exists
+#if defined (TEENSYDUINO)
+  if ( !SD.exists(pFilename.c_str()) )
+#else
   if ( !SD.exists(pFilename) )
+#endif
   {
     Serial.println(F("Jpeg file not found"));
     return JDR_INP;
   }
 
+#if defined (TEENSYDUINO)
+    return getSdJpgSize(w, h, SD.open( pFilename.c_str(), FILE_READ));
+#else
     return getSdJpgSize(w, h, SD.open( pFilename, FILE_READ));
+#endif
 }
 
 /***************************************************************************************
